@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galacio — Ristorante Italiano, București</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600;1,700&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --espresso:   #14090300;
+      --dark:       #1a0d04;
+      --mid:        #2b1a0f;
+      --cream:      #f5ede0;
+      --cream-dim:  #e8d9c4;
+      --terra:      #c4622d;
+      --terra-pale: #e08c66;
+      --gold:       #c9993a;
+      --sage:       #6b8c6a;
+      --text-dark:  #1a0d04;
+      --text-cream: #f5ede0;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      background: var(--dark);
+      color: var(--text-cream);
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.6;
+    }
+
+    /* ── NAVIGATION ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.5rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.5s ease, padding 0.4s ease;
+    }
+    nav.scrolled {
+      background: rgba(26, 13, 4, 0.95);
+      padding: 1rem 3rem;
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(196, 98, 45, 0.15);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--cream);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--terra); }
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+      text-decoration: none;
+      position: relative;
+      transition: color 0.3s;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--terra);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover { color: var(--cream); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cta {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--cream);
+      background: var(--terra);
+      border: none;
+      padding: 0.65rem 1.5rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .nav-cta:hover { background: #a84f22; transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    #hero {
+      height: 100vh;
+      min-height: 700px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 60% 50%, rgba(196,98,45,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 80% at 20% 80%, rgba(107,140,106,0.08) 0%, transparent 60%),
+        linear-gradient(160deg, #1a0d04 0%, #0f0703 40%, #1e1008 100%);
+    }
+    /* Decorative circle */
+    .hero-circle {
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      border: 1px solid rgba(196, 98, 45, 0.12);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      animation: pulse-ring 4s ease-in-out infinite;
+    }
+    .hero-circle-2 {
+      width: 900px; height: 900px;
+      border-color: rgba(196, 98, 45, 0.06);
+      animation-delay: 1.5s;
+    }
+    @keyframes pulse-ring {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      50% { transform: translate(-50%, -50%) scale(1.03); opacity: 0.7; }
+    }
+    /* Horizontal accent lines */
+    .hero-line {
+      position: absolute;
+      left: 3rem; right: 3rem;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(196,98,45,0.3), transparent);
+    }
+    .hero-line-top { top: 20%; }
+    .hero-line-bottom { bottom: 20%; }
+
+    .hero-content {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      animation: hero-reveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    @keyframes hero-reveal {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--terra-pale);
+      margin-bottom: 1.5rem;
+      animation: hero-reveal 1.2s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(5rem, 14vw, 13rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      color: var(--cream);
+      animation: hero-reveal 1.2s 0.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .hero-title span {
+      color: var(--terra);
+      font-weight: 600;
+    }
+    .hero-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-style: italic;
+      font-weight: 300;
+      color: var(--cream-dim);
+      letter-spacing: 0.08em;
+      margin-top: 1.2rem;
+      animation: hero-reveal 1.2s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .hero-divider {
+      width: 60px; height: 1px;
+      background: var(--terra);
+      margin: 2rem auto;
+      animation: hero-reveal 1.2s 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .hero-desc {
+      font-size: 0.85rem;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      color: rgba(245, 237, 224, 0.6);
+      text-transform: uppercase;
+      animation: hero-reveal 1.2s 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      margin-top: 3rem;
+      animation: hero-reveal 1.2s 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .btn-primary {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--cream);
+      background: var(--terra);
+      border: none;
+      padding: 1rem 2.5rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.3s, transform 0.2s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: #a84f22; transform: translateY(-2px); }
+    .btn-outline {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--cream);
+      background: transparent;
+      border: 1px solid rgba(245, 237, 224, 0.3);
+      padding: 1rem 2.5rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.3s, transform 0.2s, background 0.3s;
+      display: inline-block;
+    }
+    .btn-outline:hover {
+      border-color: var(--cream);
+      transform: translateY(-2px);
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      animation: hero-reveal 1.2s 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+      opacity: 0.5;
+    }
+    .hero-scroll span {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .scroll-arrow {
+      width: 1px; height: 40px;
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+    }
+    .scroll-arrow::after {
+      content: '';
+      position: absolute;
+      top: -100%;
+      width: 100%; height: 100%;
+      background: var(--terra);
+      animation: scroll-line 1.5s ease-in-out infinite;
+    }
+    @keyframes scroll-line {
+      0%   { top: -100%; }
+      100% { top: 100%; }
+    }
+
+    /* ── SECTIONS COMMON ── */
+    section { position: relative; }
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--terra-pale);
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 300;
+      line-height: 1.1;
+    }
+    .terra-line {
+      width: 48px; height: 2px;
+      background: var(--terra);
+      margin: 1.5rem 0;
+    }
+
+    /* ── ABOUT ── */
+    #about {
+      background: var(--cream);
+      color: var(--text-dark);
+      padding: 8rem 3rem;
+    }
+    .about-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+    .about-text .section-label { color: var(--terra); }
+    .about-text .section-title {
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      color: var(--text-dark);
+    }
+    .about-text .terra-line { background: var(--terra); }
+    .about-text p {
+      font-size: 0.95rem;
+      line-height: 1.9;
+      color: #4a3525;
+      font-weight: 300;
+      margin-bottom: 1.2rem;
+    }
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 3rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid rgba(196, 98, 45, 0.2);
+    }
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-style: italic;
+      font-weight: 600;
+      color: var(--terra);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #8a6a52;
+      margin-top: 0.3rem;
+    }
+    .about-visual {
+      position: relative;
+    }
+    .about-img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background:
+        linear-gradient(180deg, rgba(26,13,4,0.2) 0%, rgba(26,13,4,0.0) 40%),
+        url('https://picsum.photos/seed/galacio-pasta/600/800') center/cover;
+      position: relative;
+    }
+    .about-img::before {
+      content: '';
+      position: absolute;
+      inset: -16px -16px 16px 16px;
+      border: 1px solid rgba(196, 98, 45, 0.3);
+      z-index: -1;
+    }
+    .about-tag {
+      position: absolute;
+      bottom: -1.5rem;
+      left: -2rem;
+      background: var(--terra);
+      color: var(--cream);
+      padding: 1.2rem 1.8rem;
+    }
+    .about-tag .tag-big {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem;
+      font-style: italic;
+      font-weight: 600;
+      line-height: 1;
+    }
+    .about-tag .tag-small {
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.85;
+    }
+
+    /* ── MENU ── */
+    #menu {
+      background: var(--dark);
+      padding: 8rem 3rem;
+    }
+    .menu-inner { max-width: 1200px; margin: 0 auto; }
+    .menu-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 4rem;
+    }
+    .menu-header .section-title {
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      color: var(--cream);
+    }
+    .menu-header .link-see-all {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--terra-pale);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(196,98,45,0.4);
+      padding-bottom: 3px;
+      transition: color 0.3s, border-color 0.3s;
+      margin-bottom: 0.5rem;
+    }
+    .menu-header .link-see-all:hover { color: var(--terra); border-color: var(--terra); }
+
+    .menu-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 3rem;
+      border-bottom: 1px solid rgba(245, 237, 224, 0.1);
+    }
+    .tab-btn {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(245, 237, 224, 0.4);
+      background: none;
+      border: none;
+      padding: 0.8rem 2rem;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.3s;
+    }
+    .tab-btn.active { color: var(--cream); }
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 2px;
+      background: var(--terra);
+    }
+    .tab-btn:hover { color: var(--cream-dim); }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px;
+      background: rgba(255,255,255,0.05);
+    }
+    .menu-card {
+      background: var(--mid);
+      padding: 2rem 1.8rem;
+      position: relative;
+      transition: background 0.3s;
+      cursor: default;
+    }
+    .menu-card:hover { background: #361e10; }
+    .menu-card-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem;
+      font-style: italic;
+      color: rgba(196, 98, 45, 0.15);
+      font-weight: 600;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+    .menu-card-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--cream);
+      margin-bottom: 0.5rem;
+    }
+    .menu-card-name-ro {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--terra-pale);
+      margin-bottom: 1rem;
+    }
+    .menu-card-desc {
+      font-size: 0.82rem;
+      line-height: 1.75;
+      color: rgba(245, 237, 224, 0.55);
+      font-weight: 300;
+    }
+    .menu-card-price {
+      position: absolute;
+      top: 2rem; right: 1.8rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-style: italic;
+      color: var(--gold);
+    }
+    .menu-card.featured {
+      background: rgba(196, 98, 45, 0.12);
+      border: 1px solid rgba(196, 98, 45, 0.25);
+    }
+    .menu-card.featured:hover { background: rgba(196, 98, 45, 0.2); }
+    .badge-chef {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--cream);
+      background: var(--terra);
+      padding: 0.25rem 0.7rem;
+      display: inline-block;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── GALLERY ── */
+    #gallery {
+      background: var(--mid);
+      padding: 8rem 3rem;
+    }
+    .gallery-inner { max-width: 1200px; margin: 0 auto; }
+    .gallery-header { text-align: center; margin-bottom: 4rem; }
+    .gallery-header .section-title {
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      color: var(--cream);
+    }
+    .gallery-header .terra-line { margin: 1.5rem auto; }
+    .gallery-header p {
+      font-size: 0.88rem;
+      color: rgba(245,237,224,0.5);
+      letter-spacing: 0.05em;
+    }
+
+    .gallery-mosaic {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: 280px 280px;
+      gap: 8px;
+    }
+    .g-item {
+      overflow: hidden;
+      position: relative;
+    }
+    .g-item:nth-child(1) { grid-column: 1 / 3; grid-row: 1; }
+    .g-item:nth-child(2) { grid-column: 3; grid-row: 1; }
+    .g-item:nth-child(3) { grid-column: 4; grid-row: 1 / 3; }
+    .g-item:nth-child(4) { grid-column: 1; grid-row: 2; }
+    .g-item:nth-child(5) { grid-column: 2 / 4; grid-row: 2; }
+
+    .g-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+      display: block;
+      background-color: #2b1a0f;
+    }
+    .g-item:hover .g-img { transform: scale(1.05); }
+    .g-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(26,13,4,0.5) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* ── ATMOSPHERE QUOTE ── */
+    #quote {
+      background: var(--terra);
+      padding: 6rem 3rem;
+      text-align: center;
+    }
+    .quote-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(1.8rem, 4vw, 3.2rem);
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1.4;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .quote-author {
+      margin-top: 2rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(245, 237, 224, 0.7);
+    }
+
+    /* ── RESERVATIONS ── */
+    #reservations {
+      background: var(--cream);
+      color: var(--text-dark);
+      padding: 8rem 3rem;
+    }
+    .res-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 6rem;
+      align-items: start;
+    }
+    .res-info .section-label { color: var(--terra); }
+    .res-info .section-title {
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      color: var(--text-dark);
+    }
+    .res-info .terra-line { background: var(--terra); }
+    .res-info p {
+      font-size: 0.88rem;
+      line-height: 1.8;
+      color: #6a4a35;
+      margin-bottom: 2.5rem;
+    }
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .contact-icon {
+      width: 36px; height: 36px;
+      background: var(--terra);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.8rem;
+    }
+    .contact-detail-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #8a6a52;
+      margin-bottom: 0.2rem;
+    }
+    .contact-detail-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--text-dark);
+    }
+
+    .res-form {
+      background: var(--dark);
+      padding: 3rem;
+    }
+    .form-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.8rem;
+      color: var(--cream);
+      margin-bottom: 2rem;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(245, 237, 224, 0.5);
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 300;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(245, 237, 224, 0.1);
+      color: var(--cream);
+      padding: 0.75rem 1rem;
+      outline: none;
+      transition: border-color 0.3s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .form-group select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(196,98,45,0.7)'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
+    }
+    .form-group select option { background: #1a0d04; }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: rgba(196, 98, 45, 0.5);
+    }
+    .form-group textarea { resize: none; height: 100px; }
+    .form-submit {
+      width: 100%;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--cream);
+      background: var(--terra);
+      border: none;
+      padding: 1.1rem;
+      cursor: pointer;
+      margin-top: 1.2rem;
+      transition: background 0.3s;
+    }
+    .form-submit:hover { background: #a84f22; }
+
+    /* ── HOURS ── */
+    #hours {
+      background: var(--dark);
+      padding: 6rem 3rem;
+    }
+    .hours-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 2px 1fr 2px 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    .hours-divider {
+      background: rgba(196, 98, 45, 0.2);
+      height: 100%;
+      min-height: 120px;
+    }
+    .hours-block .section-label { margin-bottom: 1.5rem; }
+    .hours-entry {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .hours-entry:last-child { border-bottom: none; }
+    .day {
+      font-size: 0.78rem;
+      font-weight: 300;
+      color: rgba(245, 237, 224, 0.55);
+      letter-spacing: 0.05em;
+    }
+    .time {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--cream);
+    }
+    .hours-address {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .address-big {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.3rem;
+      color: var(--cream);
+      line-height: 1.5;
+    }
+    .address-sub {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: rgba(245,237,224,0.4);
+      text-transform: uppercase;
+    }
+    .map-placeholder {
+      margin-top: 1.5rem;
+      width: 100%;
+      height: 100px;
+      background: var(--mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(245,237,224,0.3);
+      border: 1px solid rgba(196,98,45,0.1);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .map-placeholder:hover { background: #361e10; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #0f0703;
+      padding: 3rem;
+      border-top: 1px solid rgba(196, 98, 45, 0.1);
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--cream);
+    }
+    .footer-logo span { color: var(--terra); }
+    .footer-copy {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: rgba(245, 237, 224, 0.3);
+      text-align: center;
+    }
+    .footer-socials {
+      display: flex;
+      gap: 1.5rem;
+    }
+    .footer-socials a {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(245, 237, 224, 0.4);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-socials a:hover { color: var(--terra-pale); }
+
+    /* ── FADE-IN ANIMATIONS ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 1.5rem; }
+      nav.scrolled { padding: 0.8rem 1.5rem; }
+      .nav-links { display: none; }
+      .about-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .about-visual { order: -1; }
+      .menu-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-mosaic {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 200px 200px 200px;
+      }
+      .g-item:nth-child(1) { grid-column: 1 / 3; grid-row: 1; }
+      .g-item:nth-child(2) { grid-column: 1; grid-row: 2; }
+      .g-item:nth-child(3) { grid-column: 2; grid-row: 2 / 4; }
+      .g-item:nth-child(4) { grid-column: 1; grid-row: 3; }
+      .g-item:nth-child(5) { grid-column: 1 / 3; grid-row: 4; }
+      .res-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .hours-inner { grid-template-columns: 1fr; }
+      .hours-divider { display: none; }
+      .footer-inner { flex-direction: column; gap: 1.5rem; text-align: center; }
+      .menu-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVIGATION ── -->
+  <nav id="navbar">
+    <a href="#hero" class="nav-logo">G<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="#about">Povestea</a></li>
+      <li><a href="#menu">Meniu</a></li>
+      <li><a href="#gallery">Atmosferă</a></li>
+      <li><a href="#reservations">Contact</a></li>
+    </ul>
+    <a href="#reservations" class="nav-cta">Rezervă</a>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-circle"></div>
+    <div class="hero-circle hero-circle-2"></div>
+    <div class="hero-line hero-line-top"></div>
+    <div class="hero-line hero-line-bottom"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">București · Est. 2024</p>
+      <h1 class="hero-title">Galaci<span>o</span></h1>
+      <p class="hero-sub">Ristorante Italiano</p>
+      <div class="hero-divider"></div>
+      <p class="hero-desc">Unde prietenii se adună, unde familia se reunește</p>
+      <div class="hero-actions">
+        <a href="#reservations" class="btn-primary">Rezervă o masă</a>
+        <a href="#menu" class="btn-outline">Explorează meniul</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- ── ABOUT ── -->
+  <section id="about">
+    <div class="about-inner">
+      <div class="about-text fade-up">
+        <p class="section-label">La Nostra Storia</p>
+        <h2 class="section-title">O masă <em>bună</em><br>începe cu<br>oameni buni</h2>
+        <div class="terra-line"></div>
+        <p>Galacio s-a născut dintr-o dragoste profundă pentru tradițiile culinare italiene și dorința de a crea un loc unde fiecare masă devine o amintire. Situați în inima Bucureștiului, vă primim ca pe membrii familiei noastre.</p>
+        <p>Ingredientele noastre sunt alese cu grijă — paste artizanale, ulei de măsline extravirgin, trufe de sezon și vinuri selecționate din cele mai bune regiuni ale Italiei. Fiecare fel de mâncare este o poveste.</p>
+        <div class="about-stats">
+          <div>
+            <div class="stat-number">12+</div>
+            <div class="stat-label">Ani de rețete rafinate</div>
+          </div>
+          <div>
+            <div class="stat-number">80+</div>
+            <div class="stat-label">Preparate în meniu</div>
+          </div>
+          <div>
+            <div class="stat-number">40</div>
+            <div class="stat-label">Etichete de vinuri</div>
+          </div>
+          <div>
+            <div class="stat-number">∞</div>
+            <div class="stat-label">Momente de neuitat</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-visual fade-up" style="transition-delay: 0.15s;">
+        <div class="about-img"></div>
+        <div class="about-tag">
+          <div class="tag-big">Fatto<br>a mano</div>
+          <div class="tag-small">Totul preparat cu mâinile noastre</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── MENU ── -->
+  <section id="menu">
+    <div class="menu-inner">
+      <div class="menu-header fade-up">
+        <div>
+          <p class="section-label">Il Nostro Menù</p>
+          <h2 class="section-title" style="color:var(--cream);">Preparate cu<br>suflet italian</h2>
+        </div>
+        <a href="#" class="link-see-all">Vezi meniul complet</a>
+      </div>
+      <div class="menu-tabs fade-up">
+        <button class="tab-btn active">Antipasti</button>
+        <button class="tab-btn">Primi Piatti</button>
+        <button class="tab-btn">Secondi</button>
+        <button class="tab-btn">Dolci</button>
+      </div>
+      <div class="menu-grid fade-up">
+        <div class="menu-card featured">
+          <span class="badge-chef">Chef's choice</span>
+          <div class="menu-card-num">01</div>
+          <div class="menu-card-name">Burrata Pugliese</div>
+          <div class="menu-card-name-ro">Burrata cu roșii cherry</div>
+          <div class="menu-card-desc">Burrata cremoasă din Puglia, roșii cherry confit, pesto de busuioc proaspăt și pesmet aurit cu trufe.</div>
+          <div class="menu-card-price">48 lei</div>
+        </div>
+        <div class="menu-card">
+          <div class="menu-card-num">02</div>
+          <div class="menu-card-name">Carpaccio di Manzo</div>
+          <div class="menu-card-name-ro">Carpaccio de vită</div>
+          <div class="menu-card-desc">Vită premium feliată fin, rucola, parmezan Reggiano 24 luni, ulei de măsline și lămâie de Amalfi.</div>
+          <div class="menu-card-price">54 lei</div>
+        </div>
+        <div class="menu-card">
+          <div class="menu-card-num">03</div>
+          <div class="menu-card-name">Bruschette al Tartufo</div>
+          <div class="menu-card-name-ro">Bruschette cu trufe</div>
+          <div class="menu-card-desc">Pâine artizanală prăjită, ricotta, ulei de trufe negre și fulgi de sare de Maldon.</div>
+          <div class="menu-card-price">38 lei</div>
+        </div>
+        <div class="menu-card">
+          <div class="menu-card-num">04</div>
+          <div class="menu-card-name">Vitello Tonnato</div>
+          <div class="menu-card-name-ro">Vițel cu sos de ton</div>
+          <div class="menu-card-desc">Clasică rețetă piemonteză — vițel fraged, sos de ton cu capere și anșoa, garnitură de lemon zest.</div>
+          <div class="menu-card-price">62 lei</div>
+        </div>
+        <div class="menu-card">
+          <div class="menu-card-num">05</div>
+          <div class="menu-card-name">Polpo alla Griglia</div>
+          <div class="menu-card-name-ro">Caracatiță la grătar</div>
+          <div class="menu-card-desc">Caracatiță mediteraneană, fasole cannellini, roșii cherry confit și chimichurri de ierburi italiene.</div>
+          <div class="menu-card-price">72 lei</div>
+        </div>
+        <div class="menu-card featured">
+          <span class="badge-chef">Sezonier</span>
+          <div class="menu-card-num">06</div>
+          <div class="menu-card-name">Crostini di Fegato</div>
+          <div class="menu-card-name-ro">Crostini toscane</div>
+          <div class="menu-card-desc">Specialitate toscană: pâte de ficat de pui cu salvie, Vin Santo și ceapă caramelizată pe crostini crocante.</div>
+          <div class="menu-card-price">42 lei</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── GALLERY ── -->
+  <section id="gallery">
+    <div class="gallery-inner">
+      <div class="gallery-header fade-up">
+        <p class="section-label">Il Nostro Spazio</p>
+        <h2 class="section-title">Atmosfera<br><em>ne definește</em></h2>
+        <div class="terra-line"></div>
+        <p>Un spațiu creat pentru momente autentice</p>
+      </div>
+      <div class="gallery-mosaic fade-up">
+        <div class="g-item">
+          <img class="g-img" src="https://picsum.photos/seed/galacio-interior1/800/400" alt="Interior restaurant Galacio" loading="lazy">
+          <div class="g-overlay"></div>
+        </div>
+        <div class="g-item">
+          <img class="g-img" src="https://picsum.photos/seed/galacio-pasta2/400/280" alt="Paste artizanale" loading="lazy">
+          <div class="g-overlay"></div>
+        </div>
+        <div class="g-item">
+          <img class="g-img" src="https://picsum.photos/seed/galacio-wine/400/560" alt="Selecție vinuri" loading="lazy">
+          <div class="g-overlay"></div>
+        </div>
+        <div class="g-item">
+          <img class="g-img" src="https://picsum.photos/seed/galacio-table/400/280" alt="Masă aranjată" loading="lazy">
+          <div class="g-overlay"></div>
+        </div>
+        <div class="g-item">
+          <img class="g-img" src="https://picsum.photos/seed/galacio-friends/800/280" alt="Prieteni la Galacio" loading="lazy">
+          <div class="g-overlay"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── QUOTE ── -->
+  <section id="quote">
+    <div class="fade-up">
+      <p class="quote-text">"A tavola non si invecchia" — La masă nu îmbătrânești niciodată.</p>
+      <p class="quote-author">Proverb Italian · Sufletul Galacio</p>
+    </div>
+  </section>
+
+  <!-- ── RESERVATIONS ── -->
+  <section id="reservations">
+    <div class="res-inner">
+      <div class="res-info fade-up">
+        <p class="section-label">Rezervări & Contact</p>
+        <h2 class="section-title">Vino la<br><em>Galacio</em></h2>
+        <div class="terra-line"></div>
+        <p>Rezervă-ți masa și lasă-te purtat de aromele Italiei, în inima Bucureștiului. Acceptăm rezervări pentru grupuri mici sau ocazii speciale.</p>
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div>
+            <div class="contact-detail-label">Telefon</div>
+            <div class="contact-detail-val">+40 721 234 567</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">✉</div>
+          <div>
+            <div class="contact-detail-label">Email</div>
+            <div class="contact-detail-val">ciao@galacio.ro</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div>
+            <div class="contact-detail-label">Adresă</div>
+            <div class="contact-detail-val">Str. Florilor 14,<br>Sector 1, București</div>
+          </div>
+        </div>
+      </div>
+      <div class="res-form fade-up" style="transition-delay:0.15s;">
+        <div class="form-title">Rezervă o masă</div>
+        <form onsubmit="handleSubmit(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Nume</label>
+              <input type="text" placeholder="Prenume Nume" required>
+            </div>
+            <div class="form-group">
+              <label>Telefon</label>
+              <input type="tel" placeholder="+40 7XX XXX XXX" required>
+            </div>
+            <div class="form-group">
+              <label>Data</label>
+              <input type="date" required>
+            </div>
+            <div class="form-group">
+              <label>Ora</label>
+              <select required>
+                <option value="" disabled selected>Selectează</option>
+                <option>12:00</option>
+                <option>13:00</option>
+                <option>14:00</option>
+                <option>19:00</option>
+                <option>20:00</option>
+                <option>21:00</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Persoane</label>
+              <select required>
+                <option value="" disabled selected>Număr persoane</option>
+                <option>1–2 persoane</option>
+                <option>3–4 persoane</option>
+                <option>5–6 persoane</option>
+                <option>7+ persoane</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Ocazie</label>
+              <select>
+                <option value="" disabled selected>Tip ocazie</option>
+                <option>Cină romantică</option>
+                <option>Aniversare</option>
+                <option>Reuniune prieteni</option>
+                <option>Eveniment business</option>
+                <option>Alta</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label>Mențiuni speciale</label>
+              <textarea placeholder="Alergii, preferințe, mesaj special..."></textarea>
+            </div>
+          </div>
+          <button type="submit" class="form-submit">Confirmă rezervarea →</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOURS ── -->
+  <section id="hours">
+    <div class="hours-inner">
+      <div class="hours-block fade-up">
+        <p class="section-label">Program Săptămânal</p>
+        <div class="hours-entry">
+          <span class="day">Luni – Miercuri</span>
+          <span class="time">12:00 – 22:00</span>
+        </div>
+        <div class="hours-entry">
+          <span class="day">Joi – Vineri</span>
+          <span class="time">12:00 – 23:00</span>
+        </div>
+        <div class="hours-entry">
+          <span class="day">Sâmbătă</span>
+          <span class="time">11:00 – 23:30</span>
+        </div>
+        <div class="hours-entry">
+          <span class="day">Duminică</span>
+          <span class="time">11:00 – 22:00</span>
+        </div>
+      </div>
+      <div class="hours-divider"></div>
+      <div class="hours-block fade-up" style="transition-delay:0.1s;">
+        <p class="section-label">Locație</p>
+        <div class="hours-address">
+          <div class="address-big">Str. Florilor 14,<br>Sector 1, București</div>
+          <div class="address-sub">Zona Floreasca · Parcare disponibilă</div>
+          <div class="map-placeholder">→ Deschide în Google Maps</div>
+        </div>
+      </div>
+      <div class="hours-divider"></div>
+      <div class="hours-block fade-up" style="transition-delay:0.2s;">
+        <p class="section-label">Urmărește-ne</p>
+        <p style="font-size:0.82rem; color:rgba(245,237,224,0.45); line-height:1.7; margin-bottom:1.5rem;">Urmărește-ne pentru inspirație culinară, evenimente speciale și noutăți din bucătăria noastră.</p>
+        <div style="display:flex; flex-direction:column; gap:0.8rem;">
+          <a href="#" style="font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--terra-pale); text-decoration:none;">Instagram →</a>
+          <a href="#" style="font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--terra-pale); text-decoration:none;">Facebook →</a>
+          <a href="#" style="font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--terra-pale); text-decoration:none;">TripAdvisor →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">Galaci<span>o</span></div>
+      <div class="footer-copy">
+        © 2024 Galacio Ristorante · București<br>
+        <span style="opacity:0.5;">Toate drepturile rezervate</span>
+      </div>
+      <div class="footer-socials">
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+        <a href="#">Maps</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Navbar scroll behavior ──
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // ── Fade-up on scroll ──
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // ── Menu tabs ──
+    const tabData = {
+      0: [
+        { n:'01', it:'Burrata Pugliese', ro:'Burrata cu roșii cherry', desc:'Burrata cremoasă din Puglia, roșii cherry confit, pesto de busuioc proaspăt și pesmet aurit cu trufe.', price:'48 lei', feat:true, badge:'Chef\'s choice' },
+        { n:'02', it:'Carpaccio di Manzo', ro:'Carpaccio de vită', desc:'Vită premium feliată fin, rucola, parmezan Reggiano 24 luni, ulei de măsline și lămâie de Amalfi.', price:'54 lei' },
+        { n:'03', it:'Bruschette al Tartufo', ro:'Bruschette cu trufe', desc:'Pâine artizanală prăjită, ricotta, ulei de trufe negre și fulgi de sare de Maldon.', price:'38 lei' },
+        { n:'04', it:'Vitello Tonnato', ro:'Vițel cu sos de ton', desc:'Clasică rețetă piemonteză — vițel fraged, sos de ton cu capere și anșoa, garnitură de lemon zest.', price:'62 lei' },
+        { n:'05', it:'Polpo alla Griglia', ro:'Caracatiță la grătar', desc:'Caracatiță mediteraneană, fasole cannellini, roșii cherry confit și chimichurri de ierburi italiene.', price:'72 lei' },
+        { n:'06', it:'Crostini di Fegato', ro:'Crostini toscane', desc:'Specialitate toscană: pâte de ficat de pui cu salvie, Vin Santo și ceapă caramelizată pe crostini crocante.', price:'42 lei', feat:true, badge:'Sezonier' },
+      ],
+      1: [
+        { n:'01', it:'Tagliatelle al Ragù', ro:'Tagliatelle bolognese', desc:'Paste artizanale cu ragù de vită și porc, gătit lent 6 ore cu vin roșu și ierburi proaspete.', price:'58 lei', feat:true, badge:'Clasic' },
+        { n:'02', it:'Risotto ai Funghi Porcini', ro:'Risotto cu porcini', desc:'Orez Carnaroli, ciuperci porcini uscate și proaspete, parmezan 36 luni, unt de fermă.', price:'65 lei' },
+        { n:'03', it:'Spaghetti Carbonara', ro:'Spaghetti Carbonara', desc:'Rețeta romană autentică: guanciale, ouă, pecorino Romano DOP, piper negru proaspăt măcinat.', price:'52 lei' },
+        { n:'04', it:'Pappardelle al Cinghiale', ro:'Pappardelle cu mistreț', desc:'Paste late cu ragù de mistreț, rozmarin, ienupăr și vin Chianti. Savoare rustic-toscană.', price:'74 lei' },
+        { n:'05', it:'Gnocchi alla Sorrentina', ro:'Gnocchi cu mozzarella', desc:'Gnocchi de casă, sos de roșii San Marzano, mozzarella di bufala, busuioc proaspăt, cuptor.', price:'56 lei' },
+        { n:'06', it:'Cacio e Pepe', ro:'Paste brânză și piper', desc:'Simplitatea romană elevată: tonnarelli, pecorino, piper Sichuan. Arta în trei ingrediente.', price:'48 lei', feat:true, badge:'Must try' },
+      ],
+      2: [
+        { n:'01', it:'Branzino al Forno', ro:'Brânzino la cuptor', desc:'Pește de mare proaspăt, capere, roșii cherry, ulei de măsline, ierburi mediteraneene.', price:'95 lei', feat:true, badge:'Fresh daily' },
+        { n:'02', it:'Bistecca Fiorentina', ro:'Bistecca Fiorentina 600g', desc:'Vită Chianina crescută în Toscana, gătită la grătar pe jar, unt cu rozmarin, sare grosieră.', price:'185 lei' },
+        { n:'03', it:'Pollo alla Cacciatora', ro:'Pui vânătoresc', desc:'Pui de fermă cu roșii, ciuperci, capere, măsline Taggiasca și vin alb. Confort food italian.', price:'78 lei' },
+        { n:'04', it:'Agnello alla Scottadito', ro:'Coaste de miel', desc:'Coaste de miel marinate, grătar, mentă proaspătă, lămâie, garnitură de legume de sezon.', price:'112 lei' },
+        { n:'05', it:'Ossobuco alla Milanese', ro:'Ossobuco milanez', desc:'Jarret de vitel brasiert lent cu gremolata, servit cu risotto alla Milanese cu șofran.', price:'128 lei', feat:true, badge:'Specialty' },
+        { n:'06', it:'Salmone in Crosta', ro:'Somon în crustă', desc:'Somon Atlantic în crustă de ierburi cu lămâie confit, sos de capere și cartofi fondant.', price:'98 lei' },
+      ],
+      3: [
+        { n:'01', it:'Tiramisu Classico', ro:'Tiramisu clasic', desc:'Rețeta originală Treviso: mascarpone, savoiardi, espresso, Marsala și cacao Valrhona.', price:'38 lei', feat:true, badge:'Since day one' },
+        { n:'02', it:'Panna Cotta alla Vaniglia', ro:'Panna cotta vanilie', desc:'Cremă delicată de vanilie Bourbon cu coulis de fructe de pădure de sezon.', price:'32 lei' },
+        { n:'03', it:'Cannolo Siciliano', ro:'Cannolo sicilian', desc:'Tuburi crocante de aluat prăjit umplute cu ricotta dulce, fistic și ciocolată neagră.', price:'36 lei' },
+        { n:'04', it:'Torta al Cioccolato', ro:'Tort de ciocolată', desc:'Fondant de ciocolată Valrhona 70%, inimă lichidă caldă, gelat de vanilie, pralinato.', price:'42 lei' },
+        { n:'05', it:'Gelato Artigianale', ro:'Înghețată artizanală', desc:'3 arome la alegere: pistacchio di Bronte, stracciatella, limone di Amalfi, fragola.', price:'28 lei' },
+        { n:'06', it:'Dolci Misti', ro:'Degustare deserturi', desc:'Mic platou cu tiramisu, panna cotta și cannolo — perfecție în trei înghițituri.', price:'58 lei', feat:true, badge:'Per 2' },
+      ],
+    };
+
+    function renderMenu(idx) {
+      const grid = document.querySelector('.menu-grid');
+      grid.style.opacity = '0';
+      grid.style.transform = 'translateY(10px)';
+      setTimeout(() => {
+        grid.innerHTML = tabData[idx].map(d => `
+          <div class="menu-card ${d.feat ? 'featured' : ''}">
+            ${d.badge ? `<span class="badge-chef">${d.badge}</span>` : ''}
+            <div class="menu-card-num">${d.n}</div>
+            <div class="menu-card-name">${d.it}</div>
+            <div class="menu-card-name-ro">${d.ro}</div>
+            <div class="menu-card-desc">${d.desc}</div>
+            <div class="menu-card-price">${d.price}</div>
+          </div>
+        `).join('');
+        grid.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+        grid.style.opacity = '1';
+        grid.style.transform = 'translateY(0)';
+      }, 200);
+    }
+
+    document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderMenu(i);
+      });
+    });
+
+    // ── Form submission ──
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('.form-submit');
+      btn.textContent = '✓ Rezervare trimisă!';
+      btn.style.background = '#6b8c6a';
+      setTimeout(() => {
+        btn.textContent = 'Confirmă rezervarea →';
+        btn.style.background = '';
+        e.target.reset();
+      }, 3500);
+    }
+
+    // ── Smooth parallax on hero ──
+    window.addEventListener('scroll', () => {
+      const hero = document.querySelector('#hero .hero-content');
+      const scrolled = window.scrollY;
+      if (scrolled < window.innerHeight) {
+        hero.style.transform = `translateY(${scrolled * 0.25}px)`;
+        hero.style.opacity = 1 - (scrolled / (window.innerHeight * 0.7));
+      }
+    });
+  </script>
+</body>
+</html>
